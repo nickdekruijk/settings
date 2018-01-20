@@ -13,13 +13,28 @@ class Setting extends Model
     ];
 
     /**
+     * Set multiple Setting from an array
+     *
+     * @return Setting
+     */
+    public static function set(Array $keys)
+    {
+        foreach($keys as $key => $value) {
+            if (is_array($value)) {
+                Setting::set_save($key, $value['value'], $value['description']);
+            } else {
+                Setting::set_save($key, $value);
+            }
+        }
+    }
+
+    /**
      * Set a Setting value and optional description
      *
      * @return Setting
      */
-    public static function set($key, $value, $description = null)
+    private static function set_save($key, $value, $description = null)
     {
-        // Find the current setting
         $setting = Setting::where('key', $key);
         if ($setting->count() == 0) {
             // It doesn't exist yet, create it
@@ -31,14 +46,11 @@ class Setting extends Model
             // Fetch the first and update value
             $setting = $setting->first();
             $setting->value = $value;
-            // Update description if provided
             if ($description) {
                 $setting->description = $description;
             }
         }
-        // Save it to database
         $setting->save();
-        // return Setting instance
         return $setting;
     }
 
@@ -60,19 +72,20 @@ class Setting extends Model
      */
     public static function get($key, $default)
     {
-        // Set the cache key
         $cacheKey = config('settings.cache_prefix', 'setting_').$key;
+
         // Check if key exists in cache and return it
         if ($value = cache($cacheKey)) {
             return $value;
         }
+
         // Not in cache yet, so fetch it from model
         $setting = Setting::where('key', $key)->first();
+
         // Set value to actual value from model or if not found use default value
         $value = isset($setting->value) ? $setting->value : $default;
-        // Store the key and value in cache
+
         Setting::cache($key, $value);
-        // Return it
         return $value;
     }
 

@@ -1,5 +1,6 @@
-# LaraPages
-A basic cache enabled Setting model, migration and helper for your Laravel project
+# LaraPages/Settings
+A basic cache enabled Setting model, migration and helper for your Laravel project.
+It uses a database to store settings for your application. When retrieving settings they are stored in the Laravel cache to prevent unnecessary database queries.
 
 ## Installation
 To install the package use

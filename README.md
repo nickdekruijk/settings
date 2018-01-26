@@ -1,3 +1,9 @@
+[![Latest Stable Version](https://poser.pugx.org/larapages/settings/v/stable)](https://packagist.org/packages/larapages/settings)
+[![Latest Unstable Version](https://poser.pugx.org/larapages/settings/v/unstable)](https://packagist.org/packages/larapages/settings)
+[![Monthly Downloads](https://poser.pugx.org/larapages/settings/d/monthly)](https://packagist.org/packages/larapages/settings)
+[![Total Downloads](https://poser.pugx.org/larapages/settings/downloads)](https://packagist.org/packages/larapages/settings)
+[![License](https://poser.pugx.org/larapages/settings/license)](https://packagist.org/packages/larapages/settings)
+
 # LaraPages/Settings
 A basic cache enabled Setting model, migration and helper for your Laravel project.
 It uses a database to store settings for your application. When retrieving settings they are stored in the Laravel cache to prevent unnecessary database queries.

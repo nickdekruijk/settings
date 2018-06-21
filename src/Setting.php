@@ -98,7 +98,8 @@ class Setting extends Model
             }
             $value = $array;
         }
-        dd($value);
+
+        // Store setting in cache and return it
         Setting::cache($key, $value);
         return $value;
     }

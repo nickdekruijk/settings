@@ -8,8 +8,8 @@ class SettingSaved
 {
     public function __construct(Setting $setting)
     {
-        // The setting was saved, update the cache
-        Setting::cache($setting->key, $setting->value);
+        // The setting was saved, clear the cache
+        Setting::cache($setting->key, null);
     }
 
 }

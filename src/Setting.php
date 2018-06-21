@@ -70,7 +70,7 @@ class Setting extends Model
      *
      * @return text
      */
-    public static function get($key, $default)
+    public static function get($key, $default = null, $keySeperator = false)
     {
         $cacheKey = config('settings.cache_prefix', 'setting_').$key;
 
@@ -83,8 +83,22 @@ class Setting extends Model
         $setting = Setting::where('key', $key)->first();
 
         // Set value to actual value from model or if not found use default value
-        $value = isset($setting->value) ? $setting->value : $default;
+        $value = $setting->value ?? $default;
 
+        // If $keySeperator parameter is set return an array by splitting value into seperate lines and key values
+        if ($keySeperator) {
+            $array = [];
+            foreach(array_map('trim', explode(chr(10), trim($value))) as $key => $val) {
+                $line = array_map('trim', explode($keySeperator, $val, 2));
+                if (isset($line[1])) {
+                    $array[$line[0]] = $line[1];
+                } else {
+                    $array[] = $line[0];
+                }
+            }
+            $value = $array;
+        }
+        dd($value);
         Setting::cache($key, $value);
         return $value;
     }

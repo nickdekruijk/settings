@@ -6,12 +6,12 @@ if (!function_exists('setting')) {
      *
      * @return text
      */
-    function setting($key, $default = null)
+    function setting($key, $default = null, $keySeperator = false)
     {
         if (is_array($key)) {
             return LaraPages\Settings\Setting::set($key);
         } else {
-            return LaraPages\Settings\Setting::get($key, $default);
+            return LaraPages\Settings\Setting::get($key, $default, $keySeperator);
         }
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace LaraPages\Settings;
+namespace NickDeKruijk\Settings;
 
 use Illuminate\Database\Seeder;
 

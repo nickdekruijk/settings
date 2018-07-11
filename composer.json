@@ -1,13 +1,13 @@
 {
-    "name": "larapages/settings",
+    "name": "nickdekruijk/settings",
     "description": "A basic cache enabled Setting model, migration and helper for your Laravel project",
     "license": "MIT",
     "keywords": [ "php", "laravel", "settings", "setting" ],
-    "homepage": "http://www.larapages.nl",
+    "homepage": "http://www.nickdekruijk.nl/packages/settings",
     "authors": [
         {
             "name": "Nick de Kruijk",
-            "email": "git@larapages.nl"
+            "email": "git@nickdekruijk.nl"
         }
     ],
     "minimum-stability": "dev",
@@ -18,13 +18,13 @@
     "extra": {
         "laravel": {
             "providers": [
-                "LaraPages\\Settings\\ServiceProvider"
+                "NickDeKruijk\\Settings\\ServiceProvider"
             ]
         }
-    },  
+    },
     "autoload": {
         "psr-4": {
-            "LaraPages\\Settings\\": "src/"
+            "NickDeKruijk\\Settings\\": "src/"
         }
     }
 }

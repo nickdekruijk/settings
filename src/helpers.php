@@ -9,9 +9,9 @@ if (!function_exists('setting')) {
     function setting($key, $default = null, $keySeperator = false)
     {
         if (is_array($key)) {
-            return LaraPages\Settings\Setting::set($key);
+            return NickDeKruijk\Settings\Setting::set($key);
         } else {
-            return LaraPages\Settings\Setting::get($key, $default, $keySeperator);
+            return NickDeKruijk\Settings\Setting::get($key, $default, $keySeperator);
         }
     }
 }

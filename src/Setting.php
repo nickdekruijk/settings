@@ -62,7 +62,7 @@ class Setting extends Model
     public static function cache($key, $value)
     {
         $cacheKey = config('settings.cache_prefix', 'setting_').$key;
-        cache([$cacheKey => $value], config('settings.cache_expires', 60));
+        cache([$cacheKey => $value], now()->addMinutes(config('settings.cache_expires', 60)));
     }
 
     /**

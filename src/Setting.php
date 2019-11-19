@@ -10,6 +10,7 @@ class Setting extends Model
     protected $dispatchesEvents = [
         'created' => SettingSaved::class,
         'updated' => SettingSaved::class,
+        'deleted' => SettingSaved::class,
     ];
 
     /**

@@ -89,7 +89,7 @@ class Setting extends Model
         // If $keySeperator parameter is set return an array by splitting value into seperate lines and key values
         if ($keySeperator) {
             $array = [];
-            foreach(array_map('trim', explode(chr(10), trim($value))) as $key => $val) {
+            foreach(array_map('trim', explode(chr(10), trim($value))) as $val) {
                 $line = array_map('trim', explode($keySeperator, $val, 2));
                 if (isset($line[1])) {
                     $array[$line[0]] = $line[1];

@@ -2,14 +2,12 @@
     "name": "nickdekruijk/settings",
     "description": "A basic cache enabled Setting model, migration and helper for your Laravel project",
     "license": "MIT",
-    "keywords": [ "php", "laravel", "settings", "setting" ],
+    "keywords": ["php", "laravel", "settings", "setting"],
     "homepage": "http://www.nickdekruijk.nl/packages/settings",
-    "authors": [
-        {
-            "name": "Nick de Kruijk",
-            "email": "git@nickdekruijk.nl"
-        }
-    ],
+    "authors": [{
+        "name": "Nick de Kruijk",
+        "email": "git@nickdekruijk.nl"
+    }],
     "minimum-stability": "dev",
     "require": {
         "php": ">=7.0.0"

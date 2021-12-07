@@ -3,6 +3,7 @@
 namespace NickDeKruijk\Settings;
 
 use Illuminate\Database\Eloquent\Model;
+use NickDeKruijk\Admin\Classes\AdminConfig;
 
 class Setting extends Model
 {
@@ -12,6 +13,21 @@ class Setting extends Model
         'updated' => SettingSaved::class,
         'deleted' => SettingSaved::class,
     ];
+
+    /**
+     * This method allows the model to be managed with the nickdekruijk/admin 2.0 package.
+     *
+     * @return AdminConfig
+     */
+    public function getAdminConfig()
+    {
+        return new AdminConfig([
+            'slug' => 'settings',
+            'icon' => 'fa-solid fa-gears',
+            'component' => 'admin.crud',
+            'title' => 'Settings',
+        ]);
+    }
 
     /**
      * Set multiple Setting from an array

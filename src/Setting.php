@@ -18,9 +18,9 @@ class Setting extends Model
      *
      * @return Setting
      */
-    public static function set(Array $keys)
+    public static function set(array $keys)
     {
-        foreach($keys as $key => $value) {
+        foreach ($keys as $key => $value) {
             if (is_array($value)) {
                 Setting::set_save($key, $value['value'], $value['description']);
             } else {
@@ -62,7 +62,7 @@ class Setting extends Model
      */
     public static function cache($key, $value)
     {
-        $cacheKey = config('settings.cache_prefix', 'setting_').$key;
+        $cacheKey = config('settings.cache_prefix', 'setting_') . $key;
         cache([$cacheKey => $value], now()->addMinutes(config('settings.cache_expires', 60)));
     }
 
@@ -73,7 +73,7 @@ class Setting extends Model
      */
     public static function get($key, $default = null, $keySeperator = false)
     {
-        $cacheKey = config('settings.cache_prefix', 'setting_').$key;
+        $cacheKey = config('settings.cache_prefix', 'setting_') . $key;
 
         // Check if key exists in cache and return it
         if ($value = cache($cacheKey)) {
@@ -89,7 +89,7 @@ class Setting extends Model
         // If $keySeperator parameter is set return an array by splitting value into seperate lines and key values
         if ($keySeperator) {
             $array = [];
-            foreach(array_map('trim', explode(chr(10), trim($value))) as $val) {
+            foreach (array_map('trim', explode(chr(10), trim($value))) as $val) {
                 $line = array_map('trim', explode($keySeperator, $val, 2));
                 if (isset($line[1])) {
                     $array[$line[0]] = $line[1];
@@ -104,5 +104,4 @@ class Setting extends Model
         Setting::cache($key, $value);
         return $value;
     }
-
 }

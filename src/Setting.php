@@ -69,7 +69,7 @@ class Setting extends Model
     /**
      * Get a Setting value from cache or database
      *
-     * @return text
+     * @return mixed
      */
     public static function get($key, $default = null, $keySeperator = false)
     {

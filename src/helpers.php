@@ -4,7 +4,7 @@ if (!function_exists('setting')) {
     /**
      * Get a Setting value from cache or database or Create/Update Settings when provided with an array
      *
-     * @return text
+     * @return mixed
      */
     function setting($key, $default = null, $keySeperator = false)
     {

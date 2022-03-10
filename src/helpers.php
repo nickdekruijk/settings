@@ -15,3 +15,15 @@ if (!function_exists('setting')) {
         }
     }
 }
+
+if (!function_exists('setting_array')) {
+    /**
+     * Get a Setting array from cache or database
+     *
+     * @return array
+     */
+    function setting_array($key, $default = null, $keySeperator = ':')
+    {
+        return NickDeKruijk\Settings\Setting::get($key, $default, $keySeperator);
+    }
+}

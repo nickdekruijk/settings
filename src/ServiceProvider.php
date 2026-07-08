@@ -18,6 +18,24 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             $this->loadMigrationsFrom(__DIR__ . '/migrations/');
         }
         $this->registerHelpers();
+        $this->registerLeapModule();
+    }
+
+    /**
+     * Register the settings admin module with Leap when Leap is installed.
+     * Guarded on class_exists so the settings package stays standalone; Leap
+     * reads leap.default_modules at request time (ModuleController::getAllModules).
+     *
+     * @return void
+     */
+    public function registerLeapModule()
+    {
+        if (class_exists(\NickDeKruijk\Leap\Module::class)) {
+            config(['leap.default_modules' => array_merge(
+                config('leap.default_modules', []),
+                [\NickDeKruijk\Settings\Leap\Setting::class],
+            )]);
+        }
     }
 
     /**

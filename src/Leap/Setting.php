@@ -31,9 +31,9 @@ class Setting extends Resource
     public function attributes()
     {
         return [
-            Attribute::make('key')->index(1)->unique()->searchable()->required()->label('Setting'),
-            Attribute::make('value')->index(2)->textarea()->label('Value'),
-            Attribute::make('description')->index(3)->label('Description'),
+            Attribute::make('key')->index(1)->unique()->searchable()->required()->label(['nl' => 'Instelling', 'en' => 'Setting']),
+            Attribute::make('description')->index(3)->label(['nl' => 'Omschrijving', 'en' => 'Description']),
+            Attribute::make('value')->index(2)->textarea()->label(['nl' => 'Waarde', 'en' => 'Value']),
         ];
     }
 }

@@ -19,7 +19,10 @@ class Setting extends Resource
 
     public $icon = 'fas-gears';
 
-    public $title = 'Settings';
+    public $title = [
+        'nl' => 'Instellingen',
+        'en' => 'Settings',
+    ];
 
     public $orderBy = 'key';
 

@@ -18,7 +18,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             $this->loadMigrationsFrom(__DIR__ . '/migrations/');
         }
         $this->registerHelpers();
-        $this->registerLeapModule();
     }
 
     /**
@@ -56,5 +55,10 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(__DIR__ . '/config.php', 'settings');
+
+        // Register the Leap module during the booting phase — this runs before any
+        // provider's boot(), so it is in place before Leap registers its module
+        // routes (leap.module.settings) in its own boot().
+        $this->app->booting(fn () => $this->registerLeapModule());
     }
 }

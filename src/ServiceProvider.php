@@ -21,6 +21,23 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     }
 
     /**
+     * Register the settings admin module with Leap when Leap is installed.
+     * Guarded on class_exists so the settings package stays standalone; Leap
+     * reads leap.default_modules at request time (ModuleController::getAllModules).
+     *
+     * @return void
+     */
+    public function registerLeapModule()
+    {
+        if (class_exists(\NickDeKruijk\Leap\Module::class)) {
+            config(['leap.default_modules' => array_merge(
+                config('leap.default_modules', []),
+                [\NickDeKruijk\Settings\Leap\Setting::class],
+            )]);
+        }
+    }
+
+    /**
      * Register helpers file
      */
     public function registerHelpers()
@@ -38,5 +55,10 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(__DIR__ . '/config.php', 'settings');
+
+        // Register the Leap module during the booting phase — this runs before any
+        // provider's boot(), so it is in place before Leap registers its module
+        // routes (leap.module.settings) in its own boot().
+        $this->app->booting(fn () => $this->registerLeapModule());
     }
 }

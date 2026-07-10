@@ -25,15 +25,24 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      * Guarded on class_exists so the settings package stays standalone; Leap
      * reads leap.default_modules at request time (ModuleController::getAllModules).
      *
+     * Idempotent: skips re-adding when already present, since this booting()
+     * callback runs on every request and config('leap.default_modules') may
+     * already contain it -- e.g. a cached config (php artisan config:cache)
+     * bakes in whatever was in the array at cache time, so an unconditional
+     * array_merge would append a duplicate on every request thereafter, and a
+     * repeated config:cache without an intervening config:clear compounds it
+     * further (2x, 3x, ...).
+     *
      * @return void
      */
     public function registerLeapModule()
     {
         if (class_exists(\NickDeKruijk\Leap\Module::class)) {
-            config(['leap.default_modules' => array_merge(
-                config('leap.default_modules', []),
-                [\NickDeKruijk\Settings\Leap\Setting::class],
-            )]);
+            $modules = config('leap.default_modules', []);
+            if (! in_array(\NickDeKruijk\Settings\Leap\Setting::class, $modules, true)) {
+                $modules[] = \NickDeKruijk\Settings\Leap\Setting::class;
+                config(['leap.default_modules' => $modules]);
+            }
         }
     }
 

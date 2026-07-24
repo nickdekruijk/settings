@@ -46,5 +46,19 @@ which will return this array
 To update of create a new setting you use the setting helper with an array like `setting(['key' => 'value']);` or call `NickDeKruijk\Settings\Setting::set([$key => $value]);`. To include description you can use `setting(['key' => ['value' => 1, 'description' => 'string']]);`.
 The setting will be added to the database or updated if it already exists. The Setting Model also triggers an event on updated and created to store the new value in the cache.
 
+## Leap admin module
+Since 1.3.0 the package ships an admin screen for editing settings and registers it with
+[Leap](https://github.com/nickdekruijk/leap) automatically when Leap is installed — the
+ServiceProvider appends `NickDeKruijk\Settings\Leap\Setting::class` to
+`leap.default_modules`, so there is nothing to configure. Without Leap the class is never
+autoloaded and the package stays standalone.
+
+**Upgrading from 1.2 or earlier:** a project that wrote its own `app/Leap/Setting.php`
+now has that screen twice. Delete your copy to use the one the package ships. Keeping it
+is also fine — from Leap 1.0.2 a module in `app/Leap/` replaces one a package registered
+under the same slug, so your version simply wins and there is no duplicate. On Leap 1.0.1
+and earlier there is no such precedence and the screen is listed twice, so there you have
+to delete one.
+
 ## License
 Settings is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).

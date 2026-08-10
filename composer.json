@@ -3,7 +3,6 @@
     "description": "A basic cache enabled Setting model, migration and helper for your Laravel project",
     "license": "MIT",
     "keywords": ["php", "laravel", "settings", "setting"],
-    "homepage": "http://www.nickdekruijk.nl/packages/settings",
     "authors": [{
         "name": "Nick de Kruijk",
         "email": "git@nickdekruijk.nl"

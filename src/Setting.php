@@ -72,52 +72,107 @@ class Setting extends Model
     }
 
     /**
-     * Store Setting in the cache.
+     * Build the cache key for a setting key.
+     *
+     * @return string
+     */
+    private static function cacheKey($key)
+    {
+        return config('settings.cache_prefix', 'setting_') . $key;
+    }
+
+    /**
+     * Store a raw Setting value in the cache, or forget it when $value is null.
+     *
+     * Passing null has always been the way to invalidate a setting, so it keeps
+     * doing that. Use forget() directly if you want to be explicit about it.
      *
      * @return void
      */
     public static function cache($key, $value)
     {
-        $cacheKey = config('settings.cache_prefix', 'setting_') . $key;
-        cache([$cacheKey => $value], now()->addMinutes(config('settings.cache_expires', 60)));
+        if ($value === null) {
+            self::forget($key);
+            return;
+        }
+        self::store($key, $value);
+    }
+
+    /**
+     * Store a raw Setting value in the cache, null included.
+     *
+     * The value is wrapped in an array so a legitimately falsy setting ("0", "",
+     * null for a setting that doesn't exist) is still a cache hit instead of
+     * hitting the database on every request.
+     *
+     * @return void
+     */
+    private static function store($key, $value)
+    {
+        cache([self::cacheKey($key) => ['value' => $value]], now()->addMinutes(config('settings.cache_expires', 60)));
+    }
+
+    /**
+     * Remove a Setting from the cache so the next read hits the database again.
+     *
+     * @return void
+     */
+    public static function forget($key)
+    {
+        cache()->forget(self::cacheKey($key));
+    }
+
+    /**
+     * Split a raw setting value into seperate lines and key values.
+     *
+     * @return array
+     */
+    private static function explodeValue($value, $keySeperator)
+    {
+        $array = [];
+        foreach (array_map('trim', explode(chr(10), trim((string) $value))) as $val) {
+            $line = array_map('trim', explode($keySeperator, $val, 2));
+            if (isset($line[1])) {
+                $array[$line[0]] = $line[1];
+            } else {
+                $array[] = $line[0];
+            }
+        }
+        return $array;
     }
 
     /**
      * Get a Setting value from cache or database
      *
+     * Only the raw database value is cached, never the array form. Both
+     * setting('x') and setting_array('x') read the same entry and each applies
+     * its own $default and $keySeperator afterwards, so neither can hand the
+     * other the wrong type.
+     *
      * @return mixed
      */
     public static function get($key, $default = null, $keySeperator = false)
     {
-        $cacheKey = config('settings.cache_prefix', 'setting_') . $key;
+        $cached = cache(self::cacheKey($key));
 
-        // Check if key exists in cache and return it
-        if ($value = cache($cacheKey)) {
-            return $value;
+        if (is_array($cached) && array_key_exists('value', $cached)) {
+            // Cache hit, use the raw value as stored
+            $value = $cached['value'];
+        } else {
+            // Not in cache yet, so fetch it from model and cache the raw value
+            $setting = Setting::where('key', $key)->first();
+            $value = $setting->value ?? null;
+            self::store($key, $value);
         }
 
-        // Not in cache yet, so fetch it from model
-        $setting = Setting::where('key', $key)->first();
+        // Use the default value if the setting isn't present in the database
+        $value = $value ?? $default;
 
-        // Set value to actual value from model or if not found use default value
-        $value = $setting->value ?? $default;
-
-        // If $keySeperator parameter is set return an array by splitting value into seperate lines and key values
+        // If $keySeperator parameter is set return an array instead of the raw value
         if ($keySeperator) {
-            $array = [];
-            foreach (array_map('trim', explode(chr(10), trim($value))) as $val) {
-                $line = array_map('trim', explode($keySeperator, $val, 2));
-                if (isset($line[1])) {
-                    $array[$line[0]] = $line[1];
-                } else {
-                    $array[] = $line[0];
-                }
-            }
-            $value = $array;
+            return self::explodeValue($value, $keySeperator);
         }
 
-        // Store setting in cache and return it
-        Setting::cache($key, $value);
         return $value;
     }
 }

@@ -8,8 +8,9 @@ class SettingSaved
 {
     public function __construct(Setting $setting)
     {
-        // The setting was saved, clear the cache
-        Setting::cache($setting->key, null);
+        // The setting was saved, forget the cached value so the next read
+        // fetches it from the database again
+        Setting::forget($setting->key);
     }
 
 }

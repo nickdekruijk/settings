@@ -44,7 +44,20 @@ which will return this array
 
 ### Adding settings
 To update of create a new setting you use the setting helper with an array like `setting(['key' => 'value']);` or call `NickDeKruijk\Settings\Setting::set([$key => $value]);`. To include description you can use `setting(['key' => ['value' => 1, 'description' => 'string']]);`.
-The setting will be added to the database or updated if it already exists. The Setting Model also triggers an event on updated and created to store the new value in the cache.
+The setting will be added to the database or updated if it already exists. The Setting Model also triggers an event on created, updated and deleted that forgets the cached value, so the next read picks up the new one.
+
+## Caching
+Only the raw database value is cached, under a single key per setting. The `$default` and
+`$keySeperator` arguments are applied after the cache read, so `setting('key')` and
+`setting_array('key')` can be mixed freely: they share one cache entry and each still gets
+its own return type. A setting that is legitimately `"0"` or `""`, and a key that isn't in
+the database at all, are cached as well instead of hitting the database on every request.
+
+To drop a cached value yourself use `NickDeKruijk\Settings\Setting::forget($key)`.
+`Setting::cache($key, null)` still does the same thing.
+
+Values cached by an older version are treated as a miss and refetched, so no cache flush is
+needed when deploying.
 
 ## Leap admin module
 Since 1.3.0 the package ships an admin screen for editing settings and registers it with
